@@ -1,0 +1,182 @@
+{% extends 'header.html' %}
+
+
+{% block contenido %}
+<script src=" https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js "></script>
+                <section class="hero is-info welcome is-small">
+                    <div class="hero-body">
+                        <div class="container">
+                            <h1 class="title">
+                                Miraflores Challenge
+                            </h1>
+                            <h2 class="subtitle">
+                                Automatización de cuidado de plantas 
+                            </h2>
+                        </div>
+                    </div>
+                </section>
+                <section class="info-tiles">
+                    <div class="tile is-ancestor has-text-centered">
+                        <div class="tile is-parent">
+                            <article class="tile is-child box">
+                                <p class="title">{{ prom_luz }}</p>
+                                <p class="subtitle">Luz Promedio</p>
+                            </article>
+                        </div>
+                        <div class="tile is-parent">
+                            <article class="tile is-child box">
+                                <p class="title">{{ prom_luz }}</p>
+                                <p class="subtitle">Temperatura Promedio</p>
+                            </article>
+                        </div>
+                        <div class="tile is-parent">
+                            <article class="tile is-child box">
+                                <p class="title">{{ prom_humedad }}</p>
+                                <p class="subtitle">Humedad Promedio</p>
+                            </article>
+                        </div>
+                        <div class="tile is-parent">
+                            <article class="tile is-child box">
+                                <p class="title">{{ prom_humedad }}</p>
+                                <p class="subtitle">Humedad del suelo Promedio</p>
+                            </article>
+                        </div>
+                    </div>
+                </section>
+                <div class="columns">
+                    <div class="column is-6">
+                        <div class="card events-card">
+                            <header class="card-header">
+                                <p class="card-header-title">
+                                    Últimas mediciones
+                                </p>
+                                <!--<a href="#" class="card-header-icon" aria-label="more options">
+                  <span class="icon">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                  </span>-->
+                </a>
+                            </header>
+                            <div class="card-table">
+                                <div class="content">
+                                    <table class="table is-fullwidth is-striped">
+                                        <thead >
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Fecha</th>
+                                                <th>Hora</th>
+                                                <th>Humedad</th>
+                                                <th>Luz</th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for medicion in mediciones %}
+                                                <tr>
+                                                    <td>{{ medicion[0] }}</td>
+                                                    <td>{{ medicion[1].strftime('%d-%m-%Y') }}</td>
+                                                    <td>{{ medicion[2] }}</td>
+                                                    <td>{{ medicion[3] }}</td>
+                                                    <td>{{ medicion[4] }}</td>
+                                                    
+                                                   
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                          
+                                           
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <footer class="card-footer">
+                                <a href="/mediciones" class="card-footer-item">Ver Todas</a>
+                            </footer>
+                        </div>
+                    </div>
+                    <div class="column is-6">
+                        <div class="card">
+                            <header class="card-header">
+                                <p class="card-header-title">
+                                    Humedad e Iluminación por hora
+                                </p>
+                                
+                            </a>
+                            </header>
+                            <div id="chartContainer" style="width: 100%; height: 400px;"></div>
+                            <script>
+                                window.onload = function () {
+                                    var chart = new CanvasJS.Chart("chartContainer", {
+                                    animationEnabled: true,
+                                    zoomEnabled: true,
+                                    title: {
+                                        text: "",
+                                        fontFamily: "Verdana"
+                                    },
+                                    axisX: {
+                                        title: "Hora del día"
+                                    },
+                                    axisY: {
+                                        title: "Intesidad Lumínica",
+                                        includeZero: true
+                                    },
+                                    legend: {
+                                        horizontalAlign: "right",
+                                        dockInsidePlotArea: "inside"
+                                    },
+                                    data: [{
+                                        type: "bubble",
+                                        xValueFormatString: "#,#0.0",
+                                        yValueFormatString: "#,#0.0",
+                                        zValueFormatString: "#,#0.0",
+                                        showInLegend: true,
+                                        legendText: "Size of Bubble Represents Population",
+                                        toolTipContent: "<br/>Hora: {x} Hrs<br/> Humedad: {y}<br/> Intensidad lumínica: {z}",
+                                        dataPoints: {{ datapoints | tojson }}
+                                    }]
+                                    });
+                                    chart.render();
+                                }
+                            </script>
+                            
+                           
+                        </div>
+                        <div class="card">
+                            <header class="card-header">
+                                <p class="card-header-title">
+                                    User Search
+                                </p>
+                                <a href="#" class="card-header-icon" aria-label="more options">
+                  <span class="icon">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                </a>
+                            </header>
+                            <div class="card-content">
+                                <div class="content">
+                                    <div class="control has-icons-left has-icons-right">
+                                        <input class="input is-large" type="text" placeholder="">
+                                        <span class="icon is-medium is-left">
+                      <i class="fa fa-search"></i>
+                    </span>
+                                        <span class="icon is-medium is-right">
+                      <i class="fa fa-check"></i>
+                    </span>
+                   
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                    
+               
+            </div>
+            
+                  
+                  
+      
+                
+          
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "header.html" %}
+{% block titulo %} Mediciones {% endblock %}
+
+{% block contenido %}
+        <form action="{{ url_for('mediciones') }}" method="POST">
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                <label class="label">Fecha Inicio</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        {{ form.dt(class='datepicker') }}
+                    </div>
+                </div>
+                <div class="field-label is-normal">
+                    <label class="label">Fecha Fin</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        {{ form.dt2(class='datepicker') }}
+                    </div>
+                </div>
+
+                <div class="control">
+                    <button class="button is-link" type="submit">Filtrar</button>
+                </div>
+                    
+                
+            </div>
+        
+    
+        </form>
+        <section class="section">
+            <div class="columns">
+                <div class="column">
+                    <h3 class="is-size-2 has-text-centered has-text-weight-semibold">Mediciones</h3>
+                    
+                    <div class="table-container mt-5">
+                        <table class="table is-stripped is-hoverable is-fullwidth">
+                            <thead >
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Humedad</th>
+                                    <th>Luz</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody >
+                                {% for medicion in mediciones %}
+                                <tr>
+                                    <td>{{ medicion[0] }}</td>
+                                    <td>{{ medicion[1] }}</td>
+                                    <td>{{ medicion[2] }}</td>
+                                    <td>{{ medicion[3] }}</td>
+                                    <td>{{ medicion[4] }}</td>
+                                    
+                                    <td>
+                                        <form action="{{url_for('eliminar_dato')}}" method="POST">
+                                            <input type="hidden" name="id" value="{{medicion[0]}}">
+                                            <button class="button is-danger">Eliminar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+{% endblock %}

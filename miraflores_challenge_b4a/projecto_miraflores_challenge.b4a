@@ -1,0 +1,258 @@
+﻿Build1=Default,b4a.example
+File1=design_savedata.bal
+File2=fondo.jpg
+File3=layout_01.bal
+File4=main.bal
+File5=principal.bal
+File6=tab_principal.bal
+File7=tabhum.bal
+File8=tabhumsuelo.bal
+File9=tabtemp.bal
+FileGroup1=Default Group
+FileGroup2=Default Group
+FileGroup3=Default Group
+FileGroup4=Default Group
+FileGroup5=Default Group
+FileGroup6=Default Group
+FileGroup7=Default Group
+FileGroup8=Default Group
+FileGroup9=Default Group
+Group=Default Group
+IconFile=
+Library1=core
+Library2=ioio
+Library3=serial
+Library4=httputils2
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="26"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~SetApplicationAttribute(android:usesCleartextTraffic, "true")~\n~CreateResourceFromFile(Macro, Themes.DarkTheme)~\n~'End of default text.~\n~
+Module1=Starter
+NumberOfFiles=9
+NumberOfLibraries=4
+NumberOfModules=1
+Version=8
+@EndOfDesignText@
+
+#Region  Project Attributes 
+	#ApplicationLabel: B4A Example
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+	'Permite establecer el título de la aplicación, versión de código y nombre
+	#ApplicationLabel: IOIO IoT Projecto Miraflores Challenge 
+	#VersionCode: 1
+	#VersionName: IOIO IoT
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: portrait
+	#CanInstallToExternalStorage: False
+	
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+	'Permite establecer atributos del Activity Module. 
+	#FullScreen: True
+	#IncludeTitle: True
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+	'YOYO
+	Dim YOYO As IOIO
+	'Timer
+	Dim relojLuz, relojPot As Timer
+	'Sensores Integrados
+	Dim sensorLuz As AnalogInput
+	Dim sensorHum As AnalogInput
+	Dim pot As AnalogInput
+	
+	
+	
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	'These variables can only be accessed from this module.
+	Private tab_vistas As TabHost
+	
+	'Base de datos
+	
+	Private ListView1 As ListView
+	Private ServerIP As String 
+	
+	'Barras de progreso
+	Private progresoLuz, progresoPot As Int 
+	Private barraProgLuz, barraProgPot As ProgressBar
+	Dim BtAdmin As BluetoothAdmin
+	
+	'Para probar potenciometro
+	Dim ValorAnalogoLuz, ValorAnalogoPot As Float
+	Dim Label1 As Label
+	Dim Label2 As Label
+	
+	Dim saveData As HttpJob
+	Dim updateData As HttpJob
+	Dim readData As HttpJob
+	Dim deleteData As HttpJob
+	Dim URL As String
+
+	
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	'Do not forget to load the layout file created with the visual designer. For example:
+	'Activity.LoadLayout("Layout1")
+	
+	Activity.LoadLayout("main")
+	URL = "https://3def-200-2-119-118.sa.ngrok.io/"
+	If FirstTime Then
+		BtAdmin.Initialize("BtAdmin")
+	
+		If YOYO.IsInitialized=False Then
+			Conectar_IOIO
+		End If
+		relojLuz.Initialize("relojLuz", 100)
+		relojPot.Initialize("relojPot", 100)
+		
+		
+		
+	End If
+	
+	tab_vistas.AddTab("General", "design_savedata")
+	tab_vistas.AddTab("Temperatura", "tabtemp")
+	tab_vistas.AddTab("Humedad", "tabhum")
+	tab_vistas.AddTab("Humedad de Suelo", "tabhumsuelo") 
+	tab_vistas.CurrentTab = 1
+	
+	Do While True
+		saveDataDB
+		Sleep(10000)
+	Loop 
+	
+
+End Sub
+
+Sub Conectar_IOIO
+	YOYO.Initialize
+	If BtAdmin.IsEnabled Then YOYO.Connect("yoyo",YOYO.CONN_BT,1,0)
+	 
+End Sub
+
+
+Sub saveDataDB
+	Dim hoy, hora As String
+	Dim datasend As String
+	DateTime.DateFormat = "yyyy-MM-dd" 'fecha	
+	DateTime.TimeFormat = "hh-mm-ss"  'hora
+	hoy = DateTime.Date(DateTime.Now) 
+	hora = DateTime.Time(DateTime.Now)
+	Log(hoy)
+	Log(hora)
+	
+	datasend = "fecha="&hoy&"&hora="&hora&"&humedad="&ValorAnalogoPot&"&luz="&ValorAnalogoLuz
+	saveData.Initialize("savedata", Me)
+	saveData.PostString(URL&"guardar_dato", datasend)
+	Log(saveData)
+End Sub
+
+Sub JobDone (job As HttpJob)
+	'save data
+	Select job
+		Case saveData
+			If job.Success Then
+				'success message
+				Log(job.GetString)
+				ToastMessageShow("Saved",False)
+			Else
+
+				ToastMessageShow("Error: "&job.ErrorMessage, True)
+			End If
+
+			saveData.Release
+	End Select
+End Sub
+
+
+Sub Desconectar_IOIO
+	sensorLuz.Close
+	sensorHum.Close
+	pot.Close
+	YOYO.Disconnect
+End Sub
+
+
+Sub yoyo_connected(noerror As Boolean)
+	If noerror Then
+		ToastMessageShow("IOIO Conectado",True)
+		Conexion_pines
+	Else
+		Log(LastException.Message)
+	End If
+End Sub
+
+Sub Conexion_pines
+	YOYO.OpenAnalogInput("sensorluz",39)
+	YOYO.OpenAnalogInput("potenciometro",40)
+	YOYO.OpenAnalogInput("humedad",41)
+	
+End Sub
+
+Sub relojLuz_Tick
+	Try
+		ValorAnalogoLuz = sensorLuz.Read
+		progresoLuz = sensorLuz.Read * 100
+		barraProgLuz.Progress = progresoLuz
+		Label1.Text= ValorAnalogoLuz
+	
+	Catch
+		Log("Error: "&LastException.Message)
+		Desconectar_IOIO
+		Conectar_IOIO
+	End Try
+	
+End Sub
+
+Sub relojPot_Tick
+	Try
+		ValorAnalogoPot = pot.Read
+		progresoPot = pot.Read * 100
+		barraProgPot.Progress = progresoPot
+		Label2.Text= ValorAnalogoPot
+	
+	Catch
+		Log("Error: "&LastException.Message)
+		Desconectar_IOIO
+		Conectar_IOIO
+	End Try
+	
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+	'Se coloca aquí el código a ejecutar cada vez que el Activity Module esta en pausa.
+	If UserClosed Then
+		Desconectar_IOIO
+	End If
+End Sub
+
+Sub sensorluz_open(noerror As Boolean, result As Object)
+	If noerror Then
+		sensorLuz=result
+		relojLuz.Enabled=True
+	Else
+		Log("Error: "&LastException.Message)
+	End If
+End Sub
+
+Sub potenciometro_open(noerror As Boolean, result As Object)
+	If noerror Then
+		pot = result
+		relojPot.Enabled = True
+	Else
+		Log("Error: "&LastException.Message)
+	End If
+End Sub

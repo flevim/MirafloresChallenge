@@ -1,0 +1,101 @@
+{% extends 'header.html' %}
+
+{% block contenido %}
+    <header class="card-header">
+        <p class="card-header-title">
+            Humedad e Iluminación por hora
+        </p>
+        
+    </header>
+    <div id="chartContainer" style="width: 100%; height: 600px;"></div>
+    
+    
+    <section class="section">
+        <div class="columns">
+            <div class="column">
+                <h3 class="is-size-2 has-text-centered has-text-weight-semibold">Mediciones</h3>
+                <div class="select is-primary">
+                    <select>
+                      <option>Seleccione una fecha</option>
+                      <option>Hoy</option>
+                      <option>Semanal</option>
+                      <option>Mensual</option>
+                      <option>Anual</option>
+                      
+                    </select>
+                  </div>
+                <div class="table-container mt-5">
+                    <table class="table is-stripped is-hoverable is-fullwidth">
+                        <thead >
+                            <tr>
+                                <th>Id</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Humedad</th>
+                                <th>Luz</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            {% for medicion in mediciones %}
+                            <tr>
+                                <td>{{ medicion[0] }}</td>
+                                <td>{{ medicion[1] }}</td>
+                                <td>{{ medicion[2] }}</td>
+                                <td>{{ medicion[3] }}</td>
+                                <td>{{ medicion[4] }}</td>
+                                
+                                <td>
+                                    <form action="{{url_for('eliminar_dato')}}" method="POST">
+                                        <input type="hidden" name="id" value="{{medicion[0]}}">
+                                        <button class="button is-danger">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+    
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        window.onload = function () {
+            var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            zoomEnabled: true,
+            title: {
+                text: "",
+                fontFamily: "Verdana"
+            },
+            axisX: {
+                title: "Hora del día"
+            },
+            axisY: {
+                title: "Intesidad Lumínica",
+                includeZero: true
+            },
+            legend: {
+                horizontalAlign: "right",
+                dockInsidePlotArea: "inside"
+            },
+            data: [{
+                type: "bubble",
+                xValueFormatString: "#,#0.0",
+                yValueFormatString: "#,#0.0",
+                zValueFormatString: "#,#0.0",
+                showInLegend: true,
+                legendText: "Size of Bubble Represents Population",
+                toolTipContent: "<br/>Hora: {x} Hrs<br/> Humedad: {y}<br/> Intensidad lumínica: {z}",
+                dataPoints: {{ datapoints | tojson }}
+            }]
+            });
+            chart.render();
+        }
+    </script>
+
+
+    </div>
+    
+{% endblock %}
