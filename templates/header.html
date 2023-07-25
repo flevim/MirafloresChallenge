@@ -10,10 +10,13 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Panel administrador</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
         <!-- Bulma Version 0.9.0-->
         <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
+        <script src="https://kit.fontawesome.com/2506fe6418.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
         
         
@@ -30,10 +33,11 @@
                         Menú
                     </p>
                     <ul class="menu-list">
-                        <li><a class="is-active" href="/general">General</a></li>
-                        <li><a href="/mediciones">Mediciones</a></li>
-                        <li><a href="/index_graficos">Gráficos</a></li>
+                        <li><a id="general" class="menu-list-item is-active" href="/general">General</a></li>
+                        <li><a id="mediciones" class="menu-list-item" href="/mediciones">Mediciones</a></li>
+                        <li><a id="index_graficos" class="menu-list-item" href="/index_graficos">Gráficos</a></li>
                     </ul>
+                    
                     <p class="menu-label">
                         Mediciones según sensor
                     </p>
@@ -57,6 +61,7 @@
     
     
     <script type = "text/javascript" src = "{{ url_for('static', filename = 'canvasjs.min.js') }}" ></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'change_activetab.js') }}" ></script>
     
     
     

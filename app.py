@@ -29,11 +29,11 @@ def mediciones():
         fecha_inicio = request.form["dt"]
         fecha_fin = request.form["dt2"]
         mediciones = controlador.obtener_data_por_fecha(fecha_inicio, fecha_fin)
-        return render_template('mediciones.html', form=form,mediciones=mediciones)
+        return render_template('mediciones.html', form = form, mediciones = mediciones)
     
     
     mediciones = controlador.obtener_data()
-    return render_template('mediciones.html', form=form,mediciones=mediciones)
+    return render_template('mediciones.html', form = form, mediciones = mediciones)
 
 
 @app.route("/eliminar_dato", methods=["POST"])
@@ -50,6 +50,12 @@ def obtener_prom_mediciones(mediciones):
 
     return prom_luz, prom_humedad
 
+def decimal_to_hora_oficial(dec):
+    hora = int(dec)
+    minutos = round((dec - hora) * 60)
+    hora_formato = f"{hora}:{minutos}"
+    return hora_formato
+
 @app.route("/general")
 def general():
     mediciones = controlador.obtener_data()
@@ -60,9 +66,12 @@ def general():
     prom_humedad = round(mean(mediciones_humedad),4)
     
     datapoints = []
+    hora_oficial = []
     for medicion in mediciones: 
         hora = medicion[2].total_seconds() / 3600
-        datapoints.append({"x": hora, "y": medicion[4] ,  "z": medicion[3] })
+        hora_oficial = decimal_to_hora_oficial(hora) 
+        print(hora_oficial)
+        datapoints.append({"x": hora, "y": medicion[4] ,  "z": medicion[3], "hora_oficial": hora_oficial })
     
     return render_template('general.html', 
                            mediciones=mediciones[:8],
@@ -91,11 +100,13 @@ def consulta_por_fecha():
     datapoints = []
     for medicion in mediciones_por_fecha: 
         hora = medicion[2].total_seconds() / 3600
-        datapoints.append({"x": hora, "y": medicion[4] ,  "z": medicion[3] }) 
+        hora_oficial = decimal_to_hora_oficial(hora)
+        datapoints.append({"x": hora, "y": medicion[4] ,  "z": medicion[3], "hora_oficial": hora_oficial }) 
     
     return render_template("renderizar_graficos.html", 
                            mediciones=mediciones_por_fecha,
                            datapoints=datapoints,
+                           hora_oficial=hora_oficial,
                            )
 
 if __name__ == '__main__':

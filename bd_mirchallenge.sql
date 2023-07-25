@@ -31,7 +31,7 @@ USE `mirch_db`;
 
 CREATE TABLE `mirch` (
   `id_dato` int(11) NOT NULL,
-  `fecha` date NOT NULL DEFAULT current_timestamp(),
+  `fecha` date NOT NULL,
   `hora` time NOT NULL,
   `humedad` float(4,3) NOT NULL,
   `luz` float(4,3) NOT NULL
