@@ -21,7 +21,6 @@ def guardar_dato():
         
     return redirect("/")
 
-@app.route('/')
 @app.route('/mediciones', methods=["GET", "POST"]) 
 def mediciones():
     form = FechaForm()
@@ -56,6 +55,7 @@ def decimal_to_hora_oficial(dec):
     hora_formato = f"{hora}:{minutos}"
     return hora_formato
 
+@app.route('/')
 @app.route("/general")
 def general():
     mediciones = controlador.obtener_data()

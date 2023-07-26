@@ -25,44 +25,81 @@
 </head>
 
 <body>
-    <div class="container mt-5">
-        <div class="columns">
-            <div class="column is-3 ">
-                <aside class="menu is-hidden-mobile">
-                    <p class="menu-label">
-                        Menú
-                    </p>
-                    <ul class="menu-list">
-                        <li><a id="general" class="menu-list-item is-active" href="/general">General</a></li>
-                        <li><a id="mediciones" class="menu-list-item" href="/mediciones">Mediciones</a></li>
-                        <li><a id="index_graficos" class="menu-list-item" href="/index_graficos">Gráficos</a></li>
-                    </ul>
-                    
-                    <p class="menu-label">
-                        Mediciones según sensor
-                    </p>
-                    <ul class="menu-list">
-                        <li><a>Humedad</a></li>
-                        <li><a>Cantidad de Luz</a></li>
-                        <li><a>Humedad del suelo</a></li>
-                    </ul>
-                    
-                    
-                </aside>
+   
+    <div class="columns is-centered">
+        <div class="column is-half">
+          <nav class="navbar is-info" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+              <a class="navbar-item" href="https://bulma.io">
+                Miraflores Challenge
+              </a>
+              <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+              </a>
             </div>
-            <div class="column is-9">
-                {% block contenido %}
-                {% endblock %}
+    
+            <div id="navbarBasicExample" class="navbar-menu">
+              <div class="navbar-start">
+                <a id="general" class="navbar-item" href="/general">
+                  General
+                </a>
+                <a id="mediciones" class="navbar-item" href="/mediciones">
+                  Mediciones
+                </a>
+                <a id="index_graficos" class="navbar-item" href="/index_graficos">
+                  Gráficos
+                </a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                  <a class="navbar-link">
+                    Mediciones según sensor
+                  </a>
+                  <div class="navbar-dropdown">
+                    <a class="navbar-item">
+                      Humedad
+                    </a>
+                    <a class="navbar-item">
+                      Intensidad lumínica
+                    </a>
+                    <hr class="navbar-divider">
+                    <a class="navbar-item">
+                      Humedad del suelo
+                    </a>
+                  </div>
+                </div>
+              </div>
+    
+              <!--
+              <div class="navbar-end">
+                <div class="navbar-item">
+                  <div class="buttons">
+                    <a class="button is-primary">
+                      <strong>Sign up</strong>
+                    </a>
+                    <a class="button is-light">
+                      Log in
+                    </a>
+                  </div>
+                </div>
+              </div>
+              -->
             </div>
-            
+          </nav>
         </div>
-       
+      </div>
+    
+    <div class="mgh-small">
+            {% block contenido %}
+            {% endblock %}
     </div>
     
     
-    <script type = "text/javascript" src = "{{ url_for('static', filename = 'canvasjs.min.js') }}" ></script>
-    <script type="text/javascript" src="{{ url_for('static', filename = 'change_activetab.js') }}" ></script>
     
+    <script type = "text/javascript" src = "{{ url_for('static', filename = 'js/canvasjs.min.js') }}" ></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/change_activetab.js') }}" ></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/burger_menu.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/dropdown.js') }}"></script>
     
     
 </body>
