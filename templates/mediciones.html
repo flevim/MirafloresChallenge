@@ -2,34 +2,37 @@
 {% block titulo %} Mediciones {% endblock %}
 
 {% block contenido %}
-        <form action="{{ url_for('mediciones') }}" method="POST">
-            <div class="field is-horizontal">
-                <div class="field-label is-normal">
-                <label class="label">Fecha Inicio</label>
-                </div>
-                <div class="field-body">
-                    <div class="field">
-                        {{ form.dt(class='datepicker') }}
+        <div class="mt-5">
+            <form action="{{ url_for('mediciones') }}" method="POST">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                    <label class="label">Fecha Inicio</label>
                     </div>
-                </div>
-                <div class="field-label is-normal">
-                    <label class="label">Fecha Fin</label>
-                </div>
-                <div class="field-body">
-                    <div class="field">
-                        {{ form.dt2(class='datepicker') }}
+                    <div class="field-body">
+                        <div class="field">
+                            {{ form.dt(class='form-control') }}
+                        </div>
                     </div>
-                </div>
-
-                <div class="control">
-                    <button class="button is-link" type="submit">Filtrar</button>
-                </div>
-                    
-                
-            </div>
-        
+                    <div class="field-label is-normal">
+                        <label class="label">Fecha Fin</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            {{ form.dt2(class='form-control') }}
+                        </div>
+                    </div>
     
-        </form>
+                    <div class="control">
+                        <button class="button is-link" type="submit">Filtrar</button>
+                    </div>
+                        
+                    
+                </div>
+            
+        
+            </form>
+        </div>
+        
         <section class="section">
             <div class="columns">
                 <div class="column">

@@ -2,6 +2,7 @@
 from flask import Flask, render_template, request, redirect, flash
 from flask_wtf import Form 
 from wtforms.fields import DateField
+from flask_bootstrap import Bootstrap
 from datetime import datetime
 from statistics import mean
 import json
@@ -10,6 +11,8 @@ import controlador
 
 # create the Flask app
 app = Flask(__name__)
+
+bootstrap = Bootstrap(app)
 
 @app.route("/guardar_dato", methods=["POST"])
 def guardar_dato():
